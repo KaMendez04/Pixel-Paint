@@ -75,7 +75,12 @@ const roomBackgrounds = [
 function ARExperienceContent() {
   const searchParams = useSearchParams()
   const artworkId = searchParams.get("artwork") || "1"
-  const artwork = artworks.find((a) => a.id === artworkId) || artworks[0]
+  const initialArtwork = artworks.find((a) => a.id === artworkId) || artworks[0]
+  const [currentArtwork, setCurrentArtwork] = useState(initialArtwork)
+  
+  const initialSizeParam = searchParams.get("size")
+  const initialSize = currentArtwork.sizes.find(s => `${s.width}x${s.height}` === initialSizeParam) || currentArtwork.sizes[0]
+  const [selectedSize, setSelectedSize] = useState(initialSize)
 
   const [scale, setScale] = useState(1)
   const [position, setPosition] = useState({ x: 0, y: -50 })
@@ -90,7 +95,11 @@ function ARExperienceContent() {
   const [isDragging, setIsDragging] = useState(false)
   const [isFavorite, setIsFavorite] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
-  const [currentArtwork, setCurrentArtwork] = useState(artwork)
+
+  // Calculate base scale from size
+  const maxDimension = Math.max(...currentArtwork.sizes.map((s) => Math.max(s.width, s.height)))
+  const currentDimension = Math.max(selectedSize.width, selectedSize.height)
+  const sizeScaleFactor = currentDimension / maxDimension
 
   const containerRef = useRef<HTMLDivElement>(null)
   const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 })
@@ -134,8 +143,9 @@ function ARExperienceContent() {
     setTimeout(() => setShowSuccess(false), 2000)
   }
 
-  const selectArtwork = (art: typeof artwork) => {
+  const selectArtwork = (art: typeof currentArtwork) => {
     setCurrentArtwork(art)
+    setSelectedSize(art.sizes[0])
     setShowArtworkPanel(false)
     handleReset()
   }
@@ -212,7 +222,7 @@ function ARExperienceContent() {
           animate={{
             x: position.x,
             y: position.y,
-            scale,
+            scale: scale * sizeScaleFactor,
             rotate: rotation,
           }}
           transition={{ type: "spring", damping: 20, stiffness: 300 }}
@@ -391,6 +401,7 @@ function ARExperienceContent() {
                 )}
               </Button>
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
@@ -404,8 +415,28 @@ function ARExperienceContent() {
             exit={{ opacity: 0, y: 100 }}
             className="absolute bottom-0 left-0 right-0 z-20"
           >
-            <div className="p-4 bg-gradient-to-t from-black/80 via-black/60 to-transparent">
-              {/* Artwork Info */}
+            <div className="p-4 bg-gradient-to-t from-black/80 via-black/60 to-transparent relative">
+              {/* Floating Quick Actions (Side by side in the corner) */}
+              <div className="absolute bottom-20 right-4 flex items-center gap-2">
+                <Button
+                  onClick={() => setShowArtworkPanel(true)}
+                  variant="ghost"
+                  className="h-8 px-3 rounded-full bg-black/60 backdrop-blur-md text-white/90 hover:bg-black/80 hover:text-white border border-white/10 gap-2 text-[10px] transition-all shadow-xl"
+                >
+                  <Image className="w-3 h-3" />
+                  Cambiar obra
+                </Button>
+                <Button
+                  onClick={() => setShowRoomPanel(true)}
+                  variant="ghost"
+                  className="h-8 px-3 rounded-full bg-black/60 backdrop-blur-md text-white/90 hover:bg-black/80 hover:text-white border border-white/10 gap-2 text-[10px] transition-all shadow-xl"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  Cambiar espacio
+                </Button>
+              </div>
+
+              {/* Artwork Info Row */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-xl overflow-hidden border-2 border-white/20">
@@ -418,58 +449,49 @@ function ARExperienceContent() {
                   <div>
                     <h2 className="text-white font-semibold">{currentArtwork.title}</h2>
                     <p className="text-white/70 text-sm">{currentArtwork.artist}</p>
-                    <p className="text-white font-bold mt-1">${currentArtwork.price}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-white font-bold">${selectedSize.price}</span>
+                      <span className="text-white/50 text-xs px-2 py-0.5 rounded-full border border-white/20">
+                        {selectedSize.width}x{selectedSize.height}cm
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsFavorite(!isFavorite)}
-                    className={cn(
-                      "w-12 h-12 rounded-xl",
-                      isFavorite
-                        ? "bg-red-500 text-white hover:bg-red-600"
-                        : "bg-white/10 text-white hover:bg-white/20"
-                    )}
-                  >
-                    <Heart className={cn("w-5 h-5", isFavorite && "fill-current")} />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleScreenshot}
-                    className="w-12 h-12 rounded-xl bg-white/10 text-white hover:bg-white/20"
-                  >
-                    <Camera className="w-5 h-5" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="w-12 h-12 rounded-xl bg-white/10 text-white hover:bg-white/20"
-                  >
-                    <Share2 className="w-5 h-5" />
-                  </Button>
-                </div>
+                <div className="flex-1" />
               </div>
 
-              {/* Quick Actions */}
-              <div className="flex items-center gap-3 mb-4">
-                <Button
-                  onClick={() => setShowArtworkPanel(true)}
-                  className="flex-1 h-12 rounded-xl bg-white/10 backdrop-blur-md text-white hover:bg-white/20 gap-2"
-                >
-                  <Image className="w-5 h-5" />
-                  Cambiar obra
-                </Button>
-                <Button
-                  onClick={() => setShowRoomPanel(true)}
-                  className="flex-1 h-12 rounded-xl bg-white/10 backdrop-blur-md text-white hover:bg-white/20 gap-2"
-                >
-                  <Sparkles className="w-5 h-5" />
-                  Cambiar espacio
-                </Button>
-              </div>
+
+                {/* Size Selection */}
+                <div className="mb-4">
+                  <p className="text-white/70 text-sm mb-2">Tamaño disponible</p>
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    {currentArtwork.sizes.map((size) => (
+                      <motion.button
+                        key={`${size.width}x${size.height}`}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => {
+                          setSelectedSize(size);
+                          // Force a small scale bounce for feedback
+                          setScale(s => s * 1.02);
+                          setTimeout(() => setScale(s => s / 1.02), 100);
+                        }}
+                        className={cn(
+                          "flex-shrink-0 px-3 py-1.5 rounded-lg transition-all border",
+                          selectedSize.width === size.width && selectedSize.height === size.height
+                            ? "bg-white/30 border-white text-white shadow-inner"
+                            : "bg-white/5 border-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
+                        )}
+                      >
+                        <span className="text-[11px] font-medium block leading-tight">
+                          {size.width} x {size.height} cm
+                        </span>
+                        <span className="text-[9px] opacity-60">
+                          ${size.price}
+                        </span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
 
               {/* Frame Selection */}
               <div className="mb-4">
@@ -504,9 +526,9 @@ function ARExperienceContent() {
                 className="w-full h-14 rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90 gap-2 text-base font-semibold"
                 asChild
               >
-                <Link href={`/obra/${currentArtwork.id}`}>
+                <Link href={`/checkout?artwork=${currentArtwork.id}&size=${selectedSize.width}x${selectedSize.height}`}>
                   <ShoppingCart className="w-5 h-5" />
-                  Comprar ahora - ${currentArtwork.price}
+                  Comprar ahora - ${selectedSize.price}
                 </Link>
               </Button>
             </div>

@@ -36,6 +36,11 @@ export default function ObraDetailPage({ params }: { params: Promise<{ id: strin
   const [isFavorite, setIsFavorite] = useState(false)
   const [selectedImage, setSelectedImage] = useState(0)
 
+  // Calculate scale factor based on selected size relative to the largest size
+  const maxDimension = Math.max(...artwork.sizes.map((s) => Math.max(s.width, s.height)))
+  const currentDimension = Math.max(selectedSize.width, selectedSize.height)
+  const scaleFactor = currentDimension / maxDimension
+
   // Simulated gallery images
   const galleryImages = [
     artwork.image,
@@ -72,39 +77,34 @@ export default function ObraDetailPage({ params }: { params: Promise<{ id: strin
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              {/* Main Image */}
-              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-secondary mb-4">
-                <motion.img
-                  key={selectedImage}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                  src={galleryImages[selectedImage]}
-                  alt={artwork.title}
-                  className="w-full h-full object-cover"
-                />
+              {/* Main Image Container with Dynamic Scaling */}
+              <div className="relative aspect-[4/5] mb-8 flex items-center justify-center bg-secondary/30 rounded-3xl overflow-hidden p-6 lg:p-12">
+                <motion.div
+                  animate={{ 
+                    scale: scaleFactor,
+                    transition: { type: "spring", stiffness: 300, damping: 30 }
+                  }}
+                  className="relative w-full h-full shadow-2xl rounded-2xl overflow-hidden bg-secondary"
+                >
+                  <motion.img
+                    key={selectedImage}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    src={galleryImages[selectedImage]}
+                    alt={artwork.title}
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
 
-                {/* AR Button Overlay */}
-                <div className="absolute bottom-4 left-4 right-4">
-                  <Button
-                    className="w-full h-14 rounded-2xl bg-white/90 backdrop-blur-md text-foreground hover:bg-white gap-2 shadow-lg"
-                    asChild
-                  >
-                    <Link href={`/ar-experience?artwork=${artwork.id}`}>
-                      <Eye className="w-5 h-5" />
-                      Visualizar en mi espacio
-                    </Link>
-                  </Button>
-                </div>
-
-                {/* Favorite Button */}
+                {/* Favorite Button (Moved outside scaling container for better UX) */}
                 <button
                   onClick={() => setIsFavorite(!isFavorite)}
                   className={cn(
-                    "absolute top-4 right-4 w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center transition-all",
+                    "absolute top-8 right-8 w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center transition-all z-10",
                     isFavorite
-                      ? "bg-red-500 text-white"
-                      : "bg-white/90 text-foreground hover:bg-white"
+                      ? "bg-red-500 text-white shadow-lg"
+                      : "bg-white/90 text-foreground hover:bg-white shadow-md"
                   )}
                 >
                   <Heart className={cn("w-5 h-5", isFavorite && "fill-current")} />
@@ -256,7 +256,7 @@ export default function ObraDetailPage({ params }: { params: Promise<{ id: strin
                   className="h-14 rounded-2xl gap-2"
                   asChild
                 >
-                  <Link href={`/ar-experience?artwork=${artwork.id}`}>
+                  <Link href={`/ar-experience?artwork=${artwork.id}&size=${selectedSize.width}x${selectedSize.height}`}>
                     <Eye className="w-5 h-5" />
                     Ver en AR
                   </Link>
