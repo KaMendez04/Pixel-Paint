@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Heart, ArrowRight, Star } from "lucide-react"
@@ -28,6 +29,8 @@ const itemVariants = {
 }
 
 export function FeaturedArtworks() {
+  const router = useRouter()
+
   return (
     <section className="py-20 lg:py-32 bg-secondary/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,11 +107,9 @@ export function FeaturedArtworks() {
                       <Button
                         size="sm"
                         className="w-full rounded-xl bg-white/90 backdrop-blur-sm text-foreground hover:bg-white"
-                        asChild
+                        onClick={() => router.push(`/ar-experience?artwork=${artwork.id}`)}
                       >
-                        <Link href={`/ar-experience?artwork=${artwork.id}`}>
-                          Visualizar en AR
-                        </Link>
+                        Visualizar en AR
                       </Button>
                     </motion.div>
 
