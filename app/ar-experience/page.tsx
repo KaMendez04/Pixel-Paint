@@ -10,6 +10,7 @@ import {
   Plus,
   Minus,
   RotateCcw,
+  RotateCw,
   Move,
   Sun,
   Moon,
@@ -165,10 +166,10 @@ function ARExperienceContent() {
           setPosition((p) => ({ ...p, y: p.y + 10 }))
           break
         case "ArrowLeft":
-          setPosition((p) => ({ ...p, x: p.x - 10 }))
+          setRotation((r) => r - 15)
           break
         case "ArrowRight":
-          setPosition((p) => ({ ...p, x: p.x + 10 }))
+          setRotation((r) => r + 15)
           break
         case "+":
           handleZoomIn()
@@ -189,7 +190,7 @@ function ARExperienceContent() {
     <div
       ref={containerRef}
       className={cn(
-        "relative min-h-screen bg-foreground overflow-hidden",
+        "relative min-h-screen bg-foreground",
         isFullscreen && "fixed inset-0 z-50"
       )}
     >
@@ -341,23 +342,34 @@ function ARExperienceContent() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-50"
           >
             <div className="flex flex-col gap-2 p-2 rounded-2xl bg-black/40 backdrop-blur-md">
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setRotation((r) => r + 90)}
+                onClick={() => setRotation((r) => r - 15)}
                 className="w-12 h-12 rounded-xl text-white hover:bg-white/20"
-                title="Rotar 90°"
+                title="Rotar a la izquierda"
               >
                 <RotateCcw className="w-5 h-5" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
+                onClick={() => setRotation((r) => r + 15)}
+                className="w-12 h-12 rounded-xl text-white hover:bg-white/20"
+                title="Rotar a la derecha"
+              >
+                <RotateCw className="w-5 h-5" />
+              </Button>
+              <div className="w-full h-px bg-white/20" />
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={handleReset}
                 className="w-12 h-12 rounded-xl text-white hover:bg-white/20"
+                title="Resetear posición"
               >
                 <Move className="w-5 h-5" />
               </Button>
@@ -376,31 +388,11 @@ function ARExperienceContent() {
             exit={{ opacity: 0, y: 100 }}
             className="absolute bottom-0 left-0 right-0 z-20"
           >
-            <div className="p-4 bg-gradient-to-t from-black/80 via-black/60 to-transparent relative">
-              {/* Floating Quick Actions (Side by side in the corner) */}
-              <div className="absolute bottom-20 right-4 flex items-center gap-2">
-                <Button
-                  onClick={() => setShowArtworkPanel(true)}
-                  variant="ghost"
-                  className="h-8 px-3 rounded-full bg-black/60 backdrop-blur-md text-white/90 hover:bg-black/80 hover:text-white border border-white/10 gap-2 text-[10px] transition-all shadow-xl"
-                >
-                  <Image className="w-3 h-3" />
-                  Cambiar obra
-                </Button>
-                <Button
-                  onClick={() => setShowRoomPanel(true)}
-                  variant="ghost"
-                  className="h-8 px-3 rounded-full bg-black/60 backdrop-blur-md text-white/90 hover:bg-black/80 hover:text-white border border-white/10 gap-2 text-[10px] transition-all shadow-xl"
-                >
-                  <Sparkles className="w-3 h-3" />
-                  Cambiar espacio
-                </Button>
-              </div>
-
+            <div className="p-4 bg-gradient-to-t from-black/80 via-black/60 to-transparent relative max-h-[60vh] overflow-y-auto">
               {/* Artwork Info Row */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-xl overflow-hidden border-2 border-white/20">
+              <div className="flex items-center justify-between mb-3 pr-24">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-12 h-12 rounded-lg overflow-hidden border-2 border-white/20 flex-shrink-0">
                     <img
                       src={currentArtwork.image}
                       alt={currentArtwork.title}
@@ -408,23 +400,21 @@ function ARExperienceContent() {
                     />
                   </div>
                   <div>
-                    <h2 className="text-white font-semibold">{currentArtwork.title}</h2>
-                    <p className="text-white/70 text-sm">{currentArtwork.artist}</p>
+                    <h2 className="text-white font-semibold line-clamp-1">{currentArtwork.title}</h2>
+                    <p className="text-white/70 text-sm line-clamp-1">{currentArtwork.artist}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-white font-bold">${selectedSize.price}</span>
-                      <span className="text-white/50 text-xs px-2 py-0.5 rounded-full border border-white/20">
+                      <span className="text-white/50 text-xs px-2 py-0.5 rounded-full border border-white/20 whitespace-nowrap">
                         {selectedSize.width}x{selectedSize.height}cm
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex-1" />
               </div>
-
 
                 {/* Size Selection */}
                 <div className="mb-4">
-                  <p className="text-white/70 text-sm mb-2">Tamaño disponible</p>
+                  <p className="text-white/70 text-sm mb-2">Tamaño</p>
                   <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                     {currentArtwork.sizes.map((size) => (
                       <motion.button
@@ -437,16 +427,16 @@ function ARExperienceContent() {
                           setTimeout(() => setScale(s => s / 1.02), 100);
                         }}
                         className={cn(
-                          "flex-shrink-0 px-3 py-1.5 rounded-lg transition-all border",
+                          "flex-shrink-0 px-2 py-1.5 rounded-lg transition-all border whitespace-nowrap",
                           selectedSize.width === size.width && selectedSize.height === size.height
                             ? "bg-white/30 border-white text-white shadow-inner"
                             : "bg-white/5 border-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
                         )}
                       >
-                        <span className="text-[11px] font-medium block leading-tight">
-                          {size.width} x {size.height} cm
+                        <span className="text-[10px] font-medium block leading-tight">
+                          {size.width}x{size.height}
                         </span>
-                        <span className="text-[9px] opacity-60">
+                        <span className="text-[8px] opacity-60">
                           ${size.price}
                         </span>
                       </motion.button>
@@ -476,10 +466,30 @@ function ARExperienceContent() {
                           backgroundColor: frame.id === "none" ? "transparent" : frame.color,
                         }}
                       />
-                      <span className="text-white text-xs">{frame.label}</span>
+                      <span className="text-white text-[10px] line-clamp-1 max-w-[50px] text-center">{frame.label}</span>
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Floating Quick Actions */}
+              <div className="flex items-center gap-2 mb-3">
+                <Button
+                  onClick={() => setShowArtworkPanel(true)}
+                  variant="ghost"
+                  className="flex-1 h-8 rounded-full bg-black/60 backdrop-blur-md text-white/90 hover:bg-black/80 hover:text-white border border-white/10 gap-2 text-[10px] transition-all"
+                >
+                  <Image className="w-3 h-3" />
+                  Cambiar obra
+                </Button>
+                <Button
+                  onClick={() => setShowRoomPanel(true)}
+                  variant="ghost"
+                  className="flex-1 h-8 rounded-full bg-black/60 backdrop-blur-md text-white/90 hover:bg-black/80 hover:text-white border border-white/10 gap-2 text-[10px] transition-all"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  Cambiar espacio
+                </Button>
               </div>
 
               {/* Buy Button */}
