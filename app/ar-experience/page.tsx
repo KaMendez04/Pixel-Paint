@@ -42,33 +42,38 @@ const frameStyles = [
 const roomBackgrounds = [
   {
     id: "wall1",
-    label: "Pared Blanca",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=1080&fit=crop",
+    label: "Fondo Oficina",
+    image: "/fondoOficina.png",
   },
   {
     id: "wall2",
-    label: "Pared Gris",
-    image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=1920&h=1080&fit=crop",
+    label: "Fondo Cafetería",
+    image: "/fondoCafeteria.png",
   },
   {
     id: "living1",
-    label: "Sala Moderna",
-    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1920&h=1080&fit=crop",
+    label: "Fondo Sala",
+    image: "/fondoSala.png",
   },
   {
     id: "living2",
-    label: "Sala Minimalista",
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1920&h=1080&fit=crop",
+    label: "Fondo Cocina",
+    image: "/fondoCocina.png",
   },
   {
     id: "bedroom",
-    label: "Dormitorio",
-    image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1920&h=1080&fit=crop",
+    label: "Fondo Cuarto",
+    image: "/fondoCuarto.png",
   },
   {
-    id: "office",
-    label: "Oficina",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop",
+    id: "kinder",
+    label: "Fondo Kinder",
+    image: "/fondoKinder.png",
+  },
+  {
+    id: "salon",
+    label: "Fondo Salón",
+    image: "/fondoSalon.png",
   },
 ]
 
@@ -199,14 +204,7 @@ function ARExperienceContent() {
           )}
         />
         {/* Ambient Light Overlay */}
-        <div
-          className={cn(
-            "absolute inset-0 transition-opacity duration-500",
-            lightMode === "night"
-              ? "bg-blue-900/20"
-              : "bg-orange-100/10"
-          )}
-        />
+        {/* Removed to show artwork more clearly */}
       </div>
 
       {/* AR Artwork */}
@@ -267,15 +265,7 @@ function ARExperienceContent() {
             />
 
             {/* Light Reflection */}
-            <div
-              className={cn(
-                "absolute inset-0 pointer-events-none transition-opacity duration-500",
-                lightMode === "day"
-                  ? "bg-gradient-to-br from-white/10 via-transparent to-transparent"
-                  : "bg-gradient-to-br from-blue-200/5 via-transparent to-transparent"
-              )}
-              style={{ margin: selectedFrame.borderWidth }}
-            />
+            {/* Removed to show artwork more clearly */}
           </div>
 
           {/* Shadow on Wall */}
@@ -619,10 +609,10 @@ function ARExperienceContent() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl overflow-hidden"
+              className="absolute bottom-0 left-0 right-0 max-h-[80vh] bg-background rounded-t-3xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-4 border-b border-border flex items-center justify-between">
+              <div className="p-4 border-b border-border flex items-center justify-between sticky top-0 z-10 bg-background">
                 <h3 className="text-lg font-semibold text-foreground">Seleccionar espacio</h3>
                 <Button
                   variant="ghost"
@@ -633,7 +623,7 @@ function ARExperienceContent() {
                   <X className="w-5 h-5" />
                 </Button>
               </div>
-              <div className="p-4 grid grid-cols-2 gap-4">
+              <div className="p-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto max-h-[calc(80vh-70px)]">
                 {roomBackgrounds.map((room) => (
                   <button
                     key={room.id}
@@ -642,23 +632,23 @@ function ARExperienceContent() {
                       setShowRoomPanel(false)
                     }}
                     className={cn(
-                      "relative rounded-xl overflow-hidden border-2 transition-all aspect-video",
+                      "relative rounded-xl overflow-hidden border-2 transition-all aspect-video group",
                       selectedRoom.id === room.id
-                        ? "border-primary"
-                        : "border-transparent hover:border-border"
+                        ? "border-primary ring-2 ring-primary"
+                        : "border-transparent hover:border-primary/50"
                     )}
                   >
                     <img
                       src={room.image}
                       alt={room.label}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-2">
-                      <p className="text-white text-sm font-medium">{room.label}</p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                      <p className="text-white text-sm font-semibold drop-shadow">{room.label}</p>
                     </div>
                     {selectedRoom.id === room.id && (
-                      <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                      <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-primary flex items-center justify-center shadow-lg">
                         <Check className="w-4 h-4 text-primary-foreground" />
                       </div>
                     )}
