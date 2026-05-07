@@ -347,25 +347,9 @@ function ARExperienceContent() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={handleZoomIn}
+                onClick={() => setRotation((r) => r + 90)}
                 className="w-12 h-12 rounded-xl text-white hover:bg-white/20"
-              >
-                <Plus className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleZoomOut}
-                className="w-12 h-12 rounded-xl text-white hover:bg-white/20"
-              >
-                <Minus className="w-5 h-5" />
-              </Button>
-              <div className="w-full h-px bg-white/20" />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setRotation((r) => r - 5)}
-                className="w-12 h-12 rounded-xl text-white hover:bg-white/20"
+                title="Rotar 90°"
               >
                 <RotateCcw className="w-5 h-5" />
               </Button>
@@ -376,19 +360,6 @@ function ARExperienceContent() {
                 className="w-12 h-12 rounded-xl text-white hover:bg-white/20"
               >
                 <Move className="w-5 h-5" />
-              </Button>
-              <div className="w-full h-px bg-white/20" />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setLightMode(lightMode === "day" ? "night" : "day")}
-                className="w-12 h-12 rounded-xl text-white hover:bg-white/20"
-              >
-                {lightMode === "day" ? (
-                  <Moon className="w-5 h-5" />
-                ) : (
-                  <Sun className="w-5 h-5" />
-                )}
               </Button>
             </div>
 
