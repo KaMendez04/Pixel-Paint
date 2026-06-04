@@ -67,26 +67,7 @@ export const artworks: Artwork[] = [
     rating: 4.8,
     reviews: 89,
   },
-  {
-    id: "3",
-    title: "Jardín Secreto",
-    artist: "Ana Martínez",
-    artistId: "a3",
-    price: 180,
-    image: "https://images.unsplash.com/photo-1549887534-1541e9326642?w=800&h=1200&fit=crop",
-    category: "Naturaleza",
-    style: "Realismo",
-    colors: ["verde", "rosa", "blanco"],
-    sizes: [
-      { width: 30, height: 45, price: 180 },
-      { width: 50, height: 75, price: 290 },
-      { width: 70, height: 105, price: 420 },
-    ],
-    description: "Un rincón mágico de naturaleza donde las flores cuentan historias de primavera eterna.",
-    featured: false,
-    rating: 4.7,
-    reviews: 64,
-  },
+
   {
     id: "4",
     title: "Olas de Color",

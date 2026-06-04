@@ -32,7 +32,7 @@ export function FeaturedArtworks() {
   const router = useRouter()
 
   return (
-    <section className="py-20 lg:py-32 bg-secondary/30">
+    <section className="py-20 lg:py-32 bg-muted">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -134,7 +134,7 @@ export function FeaturedArtworks() {
                         ${artwork.price}
                       </span>
                       <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Star className="w-4 h-4 fill-ring text-ring" />
+                        <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                         <span>{artwork.rating}</span>
                       </div>
                     </div>

@@ -6,17 +6,18 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, Heart, User, ShoppingBag, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useCart } from "@/contexts/cart-context"
 
 const navLinks = [
   { href: "/catalogo", label: "Catálogo" },
   { href: "/ar-experience", label: "Experiencia AR" },
-  { href: "/artistas", label: "Artistas" },
-  { href: "/como-funciona", label: "Cómo Funciona" },
+  { href: "/#como-funciona", label: "Cómo Funciona" },
 ]
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { totalItems, openCart } = useCart()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,7 +61,7 @@ export function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-xl hover:bg-secondary/50"
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-xl hover:bg-muted"
               >
                 {link.label}
               </Link>
@@ -75,11 +76,19 @@ export function Navigation() {
                 <span className="sr-only">Favoritos</span>
               </Link>
             </Button>
-            <Button variant="ghost" size="icon" className="rounded-xl" asChild>
-              <Link href="/carrito">
-                <ShoppingBag className="w-5 h-5" />
-                <span className="sr-only">Carrito</span>
-              </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-xl relative"
+              onClick={openCart}
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                  {totalItems > 99 ? "99+" : totalItems}
+                </span>
+              )}
+              <span className="sr-only">Carrito</span>
             </Button>
             <Button variant="ghost" size="icon" className="rounded-xl" asChild>
               <Link href="/dashboard">
@@ -126,7 +135,7 @@ export function Navigation() {
                 >
                   <Link
                     href={link.href}
-                    className="block px-4 py-3 text-lg font-medium text-foreground hover:bg-secondary rounded-xl transition-colors"
+                    className="block px-4 py-3 text-lg font-medium text-foreground hover:bg-muted rounded-xl transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
                     {link.label}
@@ -140,11 +149,18 @@ export function Navigation() {
                     Favoritos
                   </Link>
                 </Button>
-                <Button variant="outline" className="w-full rounded-xl justify-start gap-2" asChild>
-                  <Link href="/carrito">
-                    <ShoppingBag className="w-5 h-5" />
-                    Carrito
-                  </Link>
+                <Button
+                  variant="outline"
+                  className="w-full rounded-xl justify-start gap-2 relative"
+                  onClick={() => { setIsOpen(false); openCart() }}
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  Carrito
+                  {totalItems > 0 && (
+                    <span className="ml-auto w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                      {totalItems > 99 ? "99+" : totalItems}
+                    </span>
+                  )}
                 </Button>
                 <Button className="w-full rounded-xl mt-2" asChild>
                   <Link href="/ar-experience">

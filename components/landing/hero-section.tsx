@@ -14,7 +14,7 @@ export function HeroSection() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
       {/* Background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-muted via-background to-muted" />
       </div>
 
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
@@ -37,12 +37,12 @@ export function HeroSection() {
             </motion.div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-5xl font-bold tracking-tight leading-tight mb-4">
-              <span className="block text-slate-900">Visualiza arte en tu</span>
-              <span className="block text-slate-900">espacio</span>
+              <span className="block text-foreground">Visualiza arte en tu</span>
+              <span className="block text-foreground">espacio</span>
               <span className="block bg-gradient-to-r from-primary via-ring to-accent bg-clip-text text-transparent">antes de comprarlo</span>
             </h1>
 
-            <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-md">
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8 max-w-md">
               Pixel & Paint usa realidad aumentada para proyectar cuadros en tus paredes reales. Elimina la incertidumbre y encuentra el arte perfecto para tu hogar.
             </p>
 
@@ -53,7 +53,7 @@ export function HeroSection() {
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-slate-300 text-slate-900 rounded-xl h-12 px-6" asChild>
+              <Button size="lg" variant="outline" className="border-border text-foreground rounded-xl h-12 px-6" asChild>
                 <Link href="/catalogo">
                   Explorar catálogo
                 </Link>
@@ -69,8 +69,8 @@ export function HeroSection() {
                 { value: "95%", label: "Satisfacción" },
               ].map((stat) => (
                 <div key={stat.label}>
-                  <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-                  <p className="text-sm text-slate-600">{stat.label}</p>
+                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                  <p className="text-sm text-muted-foreground">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -148,8 +148,8 @@ export function HeroSection() {
                       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent text-white">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
-                              <Eye className="w-3 h-3 text-white" />
+                            <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                              <Eye className="w-3 h-3 text-primary-foreground" />
                             </div>
                             <span className="text-xs font-medium">AR Activo</span>
                           </div>
@@ -172,7 +172,7 @@ export function HeroSection() {
                             <motion.div
                               animate={{ scale: [1, 1.08, 1], opacity: [0.45, 0.8, 0.45] }}
                               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                              className="h-16 w-16 rounded-full bg-emerald-400/25 border border-emerald-300/40"
+                              className="h-16 w-16 rounded-full bg-primary/25 border border-primary/40"
                             />
                             <button
                               type="button"
@@ -197,15 +197,15 @@ export function HeroSection() {
               <motion.div
                 animate={{ y: [0, 8, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="absolute -bottom-8 -right-8 bg-white rounded-2xl p-4 shadow-lg border border-slate-200 max-w-xs"
+                className="absolute -bottom-8 -right-8 bg-white rounded-2xl p-4 shadow-lg border border-border max-w-xs"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
-                    <Eye className="w-5 h-5 text-emerald-600" />
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Eye className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">Compra segura</p>
-                    <p className="text-xs text-slate-600">Garantía incluida</p>
+                    <p className="text-sm font-semibold text-foreground">Compra segura</p>
+                    <p className="text-xs text-muted-foreground">Garantía incluida</p>
                   </div>
                 </div>
               </motion.div>
@@ -213,9 +213,9 @@ export function HeroSection() {
               <motion.div
                 animate={{ y: [0, -6, 0], x: [0, 4, 0] }}
                 transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-                className="absolute -top-5 -left-10 rounded-xl bg-white/95 backdrop-blur px-3 py-2 shadow-md border border-slate-200"
+                className="absolute -top-5 -left-10 rounded-xl bg-white/95 backdrop-blur px-3 py-2 shadow-md border border-border"
               >
-                <p className="text-[11px] font-semibold text-slate-800">Vista previa AR</p>
+                <p className="text-[11px] font-semibold text-foreground">Vista previa AR</p>
               </motion.div>
             </div>
           </motion.div>
@@ -272,8 +272,8 @@ export function HeroSection() {
                     {/* AR Bottom Bar */}
                     <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent text-white">
                       <div className="flex items-center gap-1">
-                        <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
-                          <Eye className="w-2 h-2 text-white" />
+                        <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                          <Eye className="w-2 h-2 text-primary-foreground" />
                         </div>
                         <span className="text-xs font-medium">AR Activo</span>
                       </div>

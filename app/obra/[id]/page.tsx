@@ -10,6 +10,7 @@ import {
   Star,
   Eye,
   ShoppingCart,
+  ShoppingBag,
   MessageCircle,
   Truck,
   Shield,
@@ -24,6 +25,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { artworks, artists } from "@/lib/data"
 import { cn } from "@/lib/utils"
+import { useCart } from "@/contexts/cart-context"
 
 export default function ObraDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -35,6 +37,22 @@ export default function ObraDetailPage({ params }: { params: Promise<{ id: strin
   const [quantity, setQuantity] = useState(1)
   const [isFavorite, setIsFavorite] = useState(false)
   const [selectedImage, setSelectedImage] = useState(0)
+  const [addedToCart, setAddedToCart] = useState(false)
+  const { addItem } = useCart()
+
+  const handleAddToCart = () => {
+    addItem({
+      artworkId: artwork.id,
+      title: artwork.title,
+      artist: artwork.artist,
+      image: artwork.image,
+      size: { width: selectedSize.width, height: selectedSize.height },
+      price: selectedSize.price,
+      quantity,
+    })
+    setAddedToCart(true)
+    setTimeout(() => setAddedToCart(false), 2000)
+  }
 
   // Calculate scale factor based on selected size relative to the largest size
   const maxDimension = Math.max(...artwork.sizes.map((s) => Math.max(s.width, s.height)))
@@ -239,35 +257,58 @@ export default function ObraDetailPage({ params }: { params: Promise<{ id: strin
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 mb-8">
-                <Button
-                  size="lg"
-                  className="flex-1 h-14 rounded-2xl gap-2 text-base"
-                  asChild
-                >
-                  <Link href={`/checkout?artwork=${artwork.id}&size=${selectedSize.width}x${selectedSize.height}&qty=${quantity}`}>
-                    <ShoppingCart className="w-5 h-5" />
-                    Comprar ahora
-                  </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="h-14 rounded-2xl gap-2"
-                  asChild
-                >
-                  <Link href={`/ar-experience?artwork=${artwork.id}&size=${selectedSize.width}x${selectedSize.height}`}>
-                    <Eye className="w-5 h-5" />
-                    Ver en AR
-                  </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-14 h-14 rounded-2xl p-0"
-                >
-                  <Share2 className="w-5 h-5" />
-                </Button>
+              <div className="flex flex-col gap-3 mb-8">
+                <div className="flex gap-3">
+                  <Button
+                    size="lg"
+                    className="flex-1 h-14 rounded-2xl gap-2 text-base"
+                    onClick={handleAddToCart}
+                    disabled={addedToCart}
+                  >
+                    {addedToCart ? (
+                      <>
+                        <Check className="w-5 h-5" />
+                        Agregado
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingBag className="w-5 h-5" />
+                        Agregar al carrito
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-14 h-14 rounded-2xl p-0"
+                  >
+                    <Share2 className="w-5 h-5" />
+                  </Button>
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="flex-1 h-12 rounded-2xl gap-2"
+                    asChild
+                  >
+                    <Link href={`/checkout?artwork=${artwork.id}&size=${selectedSize.width}x${selectedSize.height}&qty=${quantity}`}>
+                      <ShoppingCart className="w-5 h-5" />
+                      Comprar ahora
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="flex-1 h-12 rounded-2xl gap-2"
+                    asChild
+                  >
+                    <Link href={`/ar-experience?artwork=${artwork.id}&size=${selectedSize.width}x${selectedSize.height}`}>
+                      <Eye className="w-5 h-5" />
+                      Ver en AR
+                    </Link>
+                  </Button>
+                </div>
               </div>
 
               {/* Benefits */}

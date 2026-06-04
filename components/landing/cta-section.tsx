@@ -7,36 +7,31 @@ import { Button } from "@/components/ui/button"
 
 export function CTASection() {
   return (
-    <section className="py-20 lg:py-32 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary to-forest p-8 lg:p-16"
-        >
-          {/* Background Elements */}
-          <div className="absolute inset-0 overflow-hidden">
-            <motion.div
-              animate={{
-                rotate: [0, 360],
-              }}
-              transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-              className="absolute -top-1/2 -right-1/2 w-full h-full opacity-10"
-            >
-              <svg viewBox="0 0 400 400" className="w-full h-full">
-                <defs>
-                  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-              </svg>
-            </motion.div>
-          </div>
+    <section className="relative overflow-hidden min-h-screen flex items-center justify-center">
+      {/* Background Photo */}
+      <div className="absolute inset-0">
+        <img
+          src="/fondoPrincipal.png"
+          alt=""
+          className="hidden lg:block w-full h-full object-cover object-center"
+        />
+        <img
+          src="/fondoPrincipalMobile.png"
+          alt=""
+          className="block lg:hidden w-full h-full object-cover object-center"
+        />
+        {/* Gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-black/30" />
+      </div>
 
-          <div className="relative z-10 max-w-3xl mx-auto text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="relative z-10 w-full py-32 px-4 sm:px-6 lg:px-8"
+      >
+          <div className="max-w-3xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -70,7 +65,7 @@ export function CTASection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="h-12 sm:h-14 px-6 sm:px-8 rounded-2xl text-sm sm:text-base border-white/30 text-white hover:bg-white/10 hover:text-white"
+                className="h-12 sm:h-14 px-6 sm:px-8 rounded-2xl text-sm sm:text-base border-white/50 bg-white/15 text-white hover:bg-white/25 hover:text-white backdrop-blur-sm"
                 asChild
               >
                 <Link href="/catalogo">
@@ -107,8 +102,7 @@ export function CTASection() {
               </div>
             </motion.div>
           </div>
-        </motion.div>
-      </div>
+      </motion.div>
     </section>
   )
 }

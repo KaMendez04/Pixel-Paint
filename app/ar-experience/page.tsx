@@ -280,6 +280,23 @@ function ARExperienceContent() {
         </motion.div>
       </div>
 
+      {/* Back to Home Button */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="absolute top-4 left-4 z-30"
+      >
+        <Link href="/">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-12 h-12 rounded-2xl bg-black/40 backdrop-blur-md text-white hover:bg-black/60"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+        </Link>
+      </motion.div>
+
       {/* AR Active Indicator */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -287,7 +304,7 @@ function ARExperienceContent() {
         className="absolute top-4 left-1/2 -translate-x-1/2 z-20"
       >
         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md text-white">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#7B5EF2] animate-pulse" />
           <span className="text-sm font-medium">Modo AR Activo</span>
         </div>
       </motion.div>
@@ -295,49 +312,22 @@ function ARExperienceContent() {
       {/* Top Navigation */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: showControls ? 1 : 0, y: showControls ? 0 : -20 }}
-        className="absolute top-0 left-0 right-0 p-4 z-30"
+        animate={{ opacity: 1, y: 0 }}
+        className="absolute top-0 right-0 p-4 z-30 flex items-center gap-2"
       >
-        <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-12 h-12 rounded-2xl bg-black/40 backdrop-blur-md text-white hover:bg-black/60"
-            asChild
-          >
-            <Link href="/catalogo">
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-          </Button>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsFullscreen(!isFullscreen)}
-              className="w-12 h-12 rounded-2xl bg-black/40 backdrop-blur-md text-white hover:bg-black/60"
-            >
-              {isFullscreen ? (
-                <Minimize2 className="w-5 h-5" />
-              ) : (
-                <Maximize2 className="w-5 h-5" />
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowControls(!showControls)}
-              className="w-12 h-12 rounded-2xl bg-black/40 backdrop-blur-md text-white hover:bg-black/60"
-            >
-              <Grid3X3 className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setShowControls(!showControls)}
+          className="w-12 h-12 rounded-2xl bg-black/40 backdrop-blur-md text-white hover:bg-black/60"
+        >
+          <Grid3X3 className="w-5 h-5" />
+        </Button>
       </motion.div>
 
       {/* Side Controls */}
       <AnimatePresence>
-        {showControls && (
+        {showControls && !showArtworkPanel && !showRoomPanel && (
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -543,26 +533,26 @@ function ARExperienceContent() {
                       key={art.id}
                       onClick={() => selectArtwork(art)}
                       className={cn(
-                        "relative rounded-xl overflow-hidden border-2 transition-all",
+                        "relative rounded-xl overflow-hidden border-2 transition-all aspect-video group",
                         currentArtwork.id === art.id
-                          ? "border-primary"
-                          : "border-transparent hover:border-border"
+                          ? "border-primary ring-2 ring-primary"
+                          : "border-transparent hover:border-primary/50"
                       )}
                     >
                       <img
                         src={art.image}
                         alt={art.title}
-                        className="w-full aspect-[4/5] object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute bottom-0 left-0 right-0 p-2">
-                        <p className="text-white text-sm font-medium line-clamp-1">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-3">
+                        <p className="text-white text-sm font-semibold drop-shadow line-clamp-1">
                           {art.title}
                         </p>
                         <p className="text-white/70 text-xs">${art.price}</p>
                       </div>
                       {currentArtwork.id === art.id && (
-                        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                        <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-primary flex items-center justify-center shadow-lg">
                           <Check className="w-4 h-4 text-primary-foreground" />
                         </div>
                       )}

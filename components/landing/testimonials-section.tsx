@@ -48,7 +48,7 @@ const itemVariants = {
 
 export function TestimonialsSection() {
   return (
-    <section className="py-20 lg:py-32 bg-secondary/30">
+    <section className="py-20 lg:py-32 bg-muted">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -94,7 +94,7 @@ export function TestimonialsSection() {
               {/* Rating */}
               <div className="flex gap-1 mb-4 pt-2">
                 {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-ring text-ring" />
+                  <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
                 ))}
               </div>
 

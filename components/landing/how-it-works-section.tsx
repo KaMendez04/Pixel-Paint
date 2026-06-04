@@ -8,19 +8,19 @@ const steps = [
     icon: Scan,
     title: "Escanea tu espacio",
     description: "Apunta tu cámara hacia la pared donde quieres colocar el arte. Nuestra tecnología AR detectará automáticamente la superficie.",
-    color: "bg-accent",
+    color: "bg-primary/15",
   },
   {
     icon: Palette,
     title: "Elige una obra",
     description: "Explora nuestro catálogo de más de 500 obras de artistas independientes. Filtra por estilo, color, tamaño y precio.",
-    color: "bg-ring",
+    color: "bg-primary/15",
   },
   {
     icon: Eye,
     title: "Visualízala en tu pared",
     description: "Ve cómo se vería el cuadro en tu espacio real. Ajusta el tamaño, cambia el marco y compara diferentes opciones.",
-    color: "bg-primary",
+    color: "bg-primary/15",
   },
 ]
 
@@ -45,7 +45,7 @@ const itemVariants = {
 
 export function HowItWorksSection() {
   return (
-    <section className="py-20 lg:py-32 bg-background">
+    <section id="como-funciona" className="py-20 lg:py-32 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -97,7 +97,7 @@ export function HowItWorksSection() {
                   transition={{ type: "spring", stiffness: 300 }}
                   className={`w-16 h-16 rounded-2xl ${step.color} flex items-center justify-center mb-6`}
                 >
-                  <step.icon className="w-8 h-8 text-primary-foreground" />
+                  <step.icon className="w-8 h-8 text-primary" />
                 </motion.div>
 
                 {/* Content */}
@@ -141,7 +141,7 @@ export function HowItWorksSection() {
 function Feature({ text }: { text: string }) {
   return (
     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-      <Check className="w-4 h-4 text-ring" />
+      <Check className="w-4 h-4 text-primary/70" />
       <span>{text}</span>
     </div>
   )

@@ -3,15 +3,17 @@
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { 
-  Search, 
-  SlidersHorizontal, 
-  Heart, 
-  Star, 
+import {
+  Search,
+  SlidersHorizontal,
+  Heart,
+  Star,
   X,
   Grid3X3,
   LayoutGrid,
-  ChevronDown
+  ChevronDown,
+  ShoppingBag,
+  Check,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,6 +21,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { artworks, categories, styles, priceRanges } from "@/lib/data"
 import { cn } from "@/lib/utils"
+import { useCart } from "@/contexts/cart-context"
 
 export default function CatalogoPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -28,6 +31,26 @@ export default function CatalogoPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "masonry">("grid")
   const [favorites, setFavorites] = useState<string[]>([])
+  const [addedItems, setAddedItems] = useState<string[]>([])
+  const { addItem } = useCart()
+
+  const handleAddToCart = (e: React.MouseEvent, artwork: typeof artworks[0]) => {
+    e.preventDefault()
+    const size = artwork.sizes[0]
+    addItem({
+      artworkId: artwork.id,
+      title: artwork.title,
+      artist: artwork.artist,
+      image: artwork.image,
+      size: { width: size.width, height: size.height },
+      price: size.price,
+      quantity: 1,
+    })
+    setAddedItems((prev) => [...prev, artwork.id])
+    setTimeout(() => {
+      setAddedItems((prev) => prev.filter((id) => id !== artwork.id))
+    }, 2000)
+  }
 
   const filteredArtworks = useMemo(() => {
     return artworks.filter((artwork) => {
@@ -80,7 +103,7 @@ export default function CatalogoPage() {
       
       <div className="pt-20 lg:pt-24">
         {/* Header */}
-        <section className="bg-gradient-to-b from-secondary/50 to-background py-12 lg:py-20">
+        <section className="bg-gradient-to-b from-muted to-background py-12 lg:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -115,7 +138,7 @@ export default function CatalogoPage() {
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
                   >
                     <X className="w-4 h-4 text-muted-foreground" />
                   </button>
@@ -136,7 +159,7 @@ export default function CatalogoPage() {
                   variant="outline"
                   className={cn(
                     "rounded-xl gap-2",
-                    showFilters && "bg-secondary"
+                    showFilters && "bg-muted"
                   )}
                   onClick={() => setShowFilters(!showFilters)}
                 >
@@ -168,7 +191,7 @@ export default function CatalogoPage() {
                 <span className="text-sm text-muted-foreground">
                   {filteredArtworks.length} obras
                 </span>
-                <div className="flex items-center gap-1 bg-secondary rounded-xl p-1">
+                <div className="flex items-center gap-1 bg-muted rounded-xl p-1">
                   <button
                     onClick={() => setViewMode("grid")}
                     className={cn(
@@ -389,11 +412,29 @@ export default function CatalogoPage() {
                                 ${artwork.price}
                               </span>
                               <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                <Star className="w-4 h-4 fill-ring text-ring" />
+                                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                                 <span>{artwork.rating}</span>
                                 <span className="text-xs">({artwork.reviews})</span>
                               </div>
                             </div>
+                            <Button
+                              size="sm"
+                              className="w-full rounded-xl mt-3 gap-2"
+                              onClick={(e) => handleAddToCart(e, artwork)}
+                              disabled={addedItems.includes(artwork.id)}
+                            >
+                              {addedItems.includes(artwork.id) ? (
+                                <>
+                                  <Check className="w-4 h-4" />
+                                  Agregado
+                                </>
+                              ) : (
+                                <>
+                                  <ShoppingBag className="w-4 h-4" />
+                                  Agregar al carrito
+                                </>
+                              )}
+                            </Button>
                           </div>
                         </div>
                       </Link>
@@ -407,7 +448,7 @@ export default function CatalogoPage() {
                 animate={{ opacity: 1 }}
                 className="text-center py-20"
               >
-                <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
                   <Search className="w-8 h-8 text-muted-foreground" />
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-2">
